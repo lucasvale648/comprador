@@ -1,0 +1,299 @@
+/* Reset e configurações básicas */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    background-color: #e8f4fa;
+    color: #333;
+    line-height: 1.6;
+    touch-action: manipulation;
+}
+
+input, select, textarea {
+    font-size: 16px !important;
+}
+
+input {
+    max-height: 40px;
+}
+
+/* Layout principal */
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 15px;
+    background-color: #ffffff;
+    min-height: 100vh;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #bbdefb;
+}
+
+h1 {
+    color: #1565c0;
+    font-size: 1.7rem;
+}
+
+/* Abas */
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #bbdefb;
+}
+
+.tab {
+    flex: 1;
+    padding: 12px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-weight: bold;
+    color: #607d8b;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.tab.active {
+    color: #1565c0;
+    border-bottom-color: #1565c0;
+    background-color: #e3f2fd;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Formulários */
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #546e7a;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="tel"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cfd8dc;
+    border-radius: 4px;
+    background-color: #f0faff;
+}
+
+/* Listas */
+.purchases-list {
+    margin-top: 15px;
+}
+
+.purchase-card {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(21, 101, 192, 0.08);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-left: 4px solid #64b5f6;
+}
+
+.purchase-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #1976d2;
+}
+
+.purchase-date {
+    color: #78909c;
+    font-size: 0.9rem;
+}
+
+.purchase-items {
+    margin-top: 10px;
+}
+
+.purchase-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px dashed #cfd8dc;
+}
+
+.purchase-item span {
+    flex: 1;
+}
+
+/* Botões */
+button {
+    background-color: #64b5f6;
+    color: white;
+    border: none;
+    padding: 12px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #42a5f5;
+}
+
+.add-btn {
+    background-color: #4fc3f7;
+    margin-top: 20px;
+}
+
+.add-btn:hover {
+    background-color: #29b6f6;
+}
+
+.save-btn {
+    background-color: #2196f3;
+    margin-top: 30px;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #ffffff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #333;
+}
+
+/* Botão de excluir item */
+.purchase-item button {
+    width: auto;
+    padding: 2px 8px;
+    background-color: #ef5350;
+    margin: 0;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.purchase-item button:hover {
+    background-color: #e53935;
+}
+
+/* Botão de excluir compra */
+.delete-purchase-btn {
+    background-color: #ef5350;
+    margin-top: 5px;
+    width: auto;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+}
+
+.delete-purchase-btn:hover {
+    background-color: #d32f2f;
+}
+
+/* Layout dos itens */
+.purchase-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px dashed #cfd8dc;
+}
+
+/* Ações */
+.purchase-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: flex-end;
+}
+
+.export-pdf-btn {
+    background-color: #4fc3f7;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    width: auto;
+    margin-top: 0;
+}
+
+.export-pdf-btn:hover {
+    background-color: #29b6f6;
+}
+
+.delete-purchase-btn {
+    background-color: #ef5350;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    width: auto;
+    margin-top: 0;
+}
+
+.delete-purchase-btn:hover {
+    background-color: #c62828;
+}
+/* Adicione isso no seu arquivo style.css */
+.edit-purchase-btn {
+    padding: 5px 10px !important;
+    font-size: 0.8rem !important;
+    width: auto !important;
+    margin-top: 0 !important;
+    background-color: #FFA500 !important; /* Laranja para diferenciar */
+}
+
+.edit-purchase-btn:hover {
+    background-color: #e69500 !important;
+}
+.app-footer {
+    text-align: center;
+    margin-top: -40px;
+    color: #888;
+    font-size: 0.8rem;
+    border-top: 1px solid #eee;
+}
