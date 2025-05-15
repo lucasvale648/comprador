@@ -297,3 +297,15 @@ button:hover {
     font-size: 0.8rem;
     border-top: 1px solid #eee;
 }
+/* Estilo para o botão de editar item */
+.edit-item-btn {
+    background-color: #FFA500 !important;
+    padding: 2px 8px !important;
+    margin-left: 5px !important;
+    font-size: 0.8rem !important;
+    width: auto !important;
+}
+
+.edit-item-btn:hover {
+    background-color: #e69500 !important;
+}

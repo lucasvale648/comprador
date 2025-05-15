@@ -6,6 +6,7 @@ let currentPurchase = {
     items: []
 };
 let editingIndex = null;
+let editingItemIndex = null;
 
 // Elementos DOM
 const tabs = document.querySelectorAll('.tab');
@@ -63,43 +64,31 @@ function renderPurchasesHistory() {
         const total = purchase.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         
         purchaseEl.innerHTML = `
-    <div class="purchase-header">
-        <span>${purchase.company}</span>
-        <span class="purchase-date">${formattedDate}</span>
-    </div>
-    <div class="purchase-items">
-        ${itemsHtml}
-    </div>
-    <div class="purchase-total">
-        <strong>Total: R$ ${total.toFixed(2)}</strong>
-        <div class="purchase-actions">
-            <button class="edit-purchase-btn" onclick="startEditPurchase(${index})">
-                Editar
-            </button>
-            <button class="export-pdf-btn" onclick="generatePurchasePDF(${JSON.stringify(purchase).replace(/"/g, '&quot;')})">
-                PDF
-            </button>
-            <button class="delete-purchase-btn" onclick="deletePurchase(${index})">
-                Excluir
-            </button>
-        </div>
-    </div>
-`;
+            <div class="purchase-header">
+                <span>${purchase.company}</span>
+                <span class="purchase-date">${formattedDate}</span>
+            </div>
+            <div class="purchase-items">
+                ${itemsHtml}
+            </div>
+            <div class="purchase-total">
+                <strong>Total: R$ ${total.toFixed(2)}</strong>
+                <div class="purchase-actions">
+                    <button class="edit-purchase-btn" onclick="startEditPurchase(${index})">
+                        Editar
+                    </button>
+                    <button class="export-pdf-btn" onclick="generatePurchasePDF(${JSON.stringify(purchase).replace(/"/g, '&quot;')})">
+                        PDF
+                    </button>
+                    <button class="delete-purchase-btn" onclick="deletePurchase(${index})">
+                        Excluir
+                    </button>
+                </div>
+            </div>
+        `;
         
         purchasesHistory.appendChild(purchaseEl);
     });
-}
-
-function startEditPurchase(index) {
-    editingIndex = index;
-    currentPurchase = JSON.parse(JSON.stringify(purchases[index]));
-    
-    companyName.value = currentPurchase.company;
-    renderCurrentItems();
-    switchTab('new-purchase');
-    
-    // Altera o botão para "Atualizar Compra"
-    savePurchaseBtn.textContent = 'Atualizar Compra';
 }
 
 function renderCurrentItems() {
@@ -116,10 +105,36 @@ function renderCurrentItems() {
         itemEl.innerHTML = `
             <span>${item.quantity}x ${item.name}</span>
             <span>R$ ${(item.price * item.quantity).toFixed(2)}</span>
+            <button class="edit-item-btn" onclick="startEditItem(${index})">Edit</button>
             <button onclick="removeItem(${index})">✕</button>
         `;
         itemsList.appendChild(itemEl);
     });
+}
+
+function startEditPurchase(index) {
+    editingIndex = index;
+    currentPurchase = JSON.parse(JSON.stringify(purchases[index]));
+    
+    companyName.value = currentPurchase.company;
+    renderCurrentItems();
+    switchTab('new-purchase');
+    savePurchaseBtn.textContent = 'Atualizar Compra';
+}
+
+function startEditItem(index) {
+    editingItemIndex = index;
+    const item = currentPurchase.items[index];
+    
+    itemName.value = item.name;
+    itemQuantity.value = item.quantity;
+    itemPrice.value = item.price.toFixed(2);
+    
+    itemModal.style.display = 'block';
+    itemName.focus();
+    
+    // Altera o botão para "Atualizar Item"
+    saveItemBtn.textContent = 'Atualizar Item';
 }
 
 function addItem() {
@@ -128,10 +143,21 @@ function addItem() {
     const price = parseFloat(itemPrice.value) || 0;
     
     if (name) {
-        currentPurchase.items.push({ name, quantity, price });
+        if (editingItemIndex !== null) {
+            // Atualiza item existente
+            currentPurchase.items[editingItemIndex] = { name, quantity, price };
+            editingItemIndex = null;
+        } else {
+            // Adiciona novo item
+            currentPurchase.items.push({ name, quantity, price });
+        }
+        
         renderCurrentItems();
         closeModal.click();
         resetItemForm();
+        
+        // Restaura o texto do botão
+        saveItemBtn.textContent = 'Salvar Item';
     }
 }
 
@@ -165,10 +191,8 @@ function savePurchase() {
     currentPurchase.date = new Date();
     
     if (editingIndex !== null) {
-        // Atualiza compra existente
         purchases[editingIndex] = {...currentPurchase};
     } else {
-        // Adiciona nova compra
         purchases.push({...currentPurchase});
     }
     
@@ -186,8 +210,6 @@ function savePurchase() {
     renderCurrentItems();
     switchTab('my-purchases');
     renderPurchasesHistory();
-    
-    // Restaura o texto do botão
     savePurchaseBtn.textContent = 'Salvar Compra';
     
     alert(`Compra ${editingIndex !== null ? 'atualizada' : 'salva'} com sucesso!`);
@@ -197,12 +219,10 @@ function generatePurchasePDF(purchaseData) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     
-    // Configurações do documento
     const title = "PEDIDO DE COMPRA";
     const date = new Date(purchaseData.date).toLocaleDateString('pt-BR');
     const time = new Date(purchaseData.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     
-    // Cabeçalho
     doc.setFontSize(18);
     doc.text(title, 105, 20, { align: 'center' });
     
@@ -210,11 +230,9 @@ function generatePurchasePDF(purchaseData) {
     doc.text(`Empresa: ${purchaseData.company}`, 14, 30);
     doc.text(`Data: ${date} às ${time}`, 14, 38);
     
-    // Linha divisória
     doc.setDrawColor(200, 200, 200);
     doc.line(14, 42, 196, 42);
     
-    // Tabela de itens
     const itemsData = purchaseData.items.map(item => [
         item.name,
         item.quantity,
@@ -227,7 +245,7 @@ function generatePurchasePDF(purchaseData) {
         head: [['Item', 'Qtd', 'Preço Unit.', 'Total']],
         body: itemsData,
         headStyles: {
-            fillColor: [138, 170, 229], // Azul pastel
+            fillColor: [138, 170, 229],
             textColor: 255
         },
         styles: {
@@ -242,19 +260,17 @@ function generatePurchasePDF(purchaseData) {
         }
     });
     
-    // Total geral
     const total = purchaseData.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     doc.setFontSize(12);
     doc.text(`Total Geral: R$ ${total.toFixed(2)}`, 14, doc.lastAutoTable.finalY + 15);
     
-    // Salvar o PDF
     doc.save(`Pedido_${purchaseData.company}_${date.replace(/\//g, '-')}.pdf`);
 }
 
 function resetItemForm() {
     itemName.value = '';
-    itemQuantity.value = '';
-    itemPrice.valeu ='';
+    itemQuantity.value = '1';
+    itemPrice.value = '0.00'; // Limpa o campo de valor como solicitado
 }
 
 // Event Listeners
@@ -263,8 +279,11 @@ tabs.forEach(tab => {
 });
 
 addItemBtn.addEventListener('click', () => {
+    editingItemIndex = null;
+    resetItemForm();
     itemModal.style.display = 'block';
     itemName.focus();
+    saveItemBtn.textContent = 'Salvar Item';
 });
 
 closeModal.addEventListener('click', () => {
@@ -302,3 +321,4 @@ window.removeItem = removeItem;
 window.deletePurchase = deletePurchase;
 window.generatePurchasePDF = generatePurchasePDF;
 window.startEditPurchase = startEditPurchase;
+window.startEditItem = startEditItem;
