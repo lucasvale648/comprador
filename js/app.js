@@ -253,7 +253,7 @@ function generatePurchasePDF(purchaseData) {
 
 function resetItemForm() {
     itemName.value = '';
-    itemQuantity.value = '1';
+    itemQuantity.value = '';
     itemPrice.valeu ='';
 }
 
