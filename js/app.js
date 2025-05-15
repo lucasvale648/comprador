@@ -219,7 +219,7 @@ function generatePurchasePDF(purchaseData) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     
-    const title = "PEDIDO DE COMPRA";
+    const title = "PEDIDO DE COMPRA LIMPEC";
     const date = new Date(purchaseData.date).toLocaleDateString('pt-BR');
     const time = new Date(purchaseData.date).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     
