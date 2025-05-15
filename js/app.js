@@ -269,8 +269,8 @@ function generatePurchasePDF(purchaseData) {
 
 function resetItemForm() {
     itemName.value = '';
-    itemQuantity.value = '1';
-    itemPrice.value = '0.00'; // Limpa o campo de valor como solicitado
+    itemQuantity.value = '';
+    itemPrice.value = ''; // Limpa o campo de valor como solicitado
 }
 
 // Event Listeners
